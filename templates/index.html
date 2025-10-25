@@ -17,7 +17,7 @@
       </p>
 
       <form action="/predict" method="POST" class="input-area">
-        <textarea name="news" placeholder="Paste or type a news headline or article here..." required></textarea>
+        <textarea name="news" placeholder="Paste or type a news headline or article here..." required>{{ request.form.news if request.form.news else '' }}</textarea>
         <button type="submit">Check Authenticity</button>
       </form>
 
@@ -27,9 +27,18 @@
         <p>{{ result }}</p>
       </div>
 
-      {% if verified %}
+      {% if verified and trust_scores %}
         <div class="verified-box">
-          <h3>✅ Verified Sources Found:</h3>
+          <h3>Verified Sources Found with Trust Scores:</h3>
+          <ul>
+            {% for source, score in trust_scores.items() %}
+              <li>{{ source }}  Trust Score: {{ score }}%</li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% elif verified %}
+        <div class="verified-box">
+          <h3>Verified Sources Found:</h3>
           <ul>
             {% for s in sources %}
               <li>{{ s }}</li>
@@ -38,7 +47,7 @@
         </div>
       {% else %}
         <div class="verified-box warning">
-          <h3>⚠️ No Matching News Found in Trusted Sources</h3>
+          <h3> No Matching News Found in Trusted Sources</h3>
         </div>
       {% endif %}
       {% endif %}
@@ -46,7 +55,7 @@
   </div>
 
   <footer>
-   
+    <p style="text-align:center; margin-top:20px;">&copy; 2025 Fake News Detection System</p>
   </footer>
 </body>
 </html>

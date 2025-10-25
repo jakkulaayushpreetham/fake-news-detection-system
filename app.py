@@ -1,146 +1,91 @@
-# -----------------------------------------------------------
-# 🧠 Intelligent Fake News Detection System (Flask Version)
-# Author: Jakkula Ayush Preetham
-# Dataset: Fake.csv & True.csv (Kaggle)
-# -----------------------------------------------------------
-
-from flask import Flask, render_template, request
-import joblib
-import re
-import pandas as pd
-import os
-
-# -----------------------------------------------------------
-# 1️⃣ Initialize Flask App
-# -----------------------------------------------------------
-app = Flask(__name__)
-
-# -----------------------------------------------------------
-# 2️⃣ Paths and Model Loading
-# -----------------------------------------------------------
-FAKE_PATH = "C:/Havkathon/fake-news-detection-system/dataset/Fake.csv"
-TRUE_PATH = "C:/Havkathon/fake-news-detection-system/dataset/True.csv"
-MERGED_PATH = "fake_news_dataset.csv"
-
-# Load trained model and vectorizer
-model = joblib.load("fake_news_model.pkl")
-vectorizer = joblib.load("vectorizer.pkl")
-
-print(" Model and vectorizer loaded successfully.")
-
-# -----------------------------------------------------------
-# 3️⃣ Merge Fake & True datasets if not already combined
-# -----------------------------------------------------------
-if not os.path.exists(MERGED_PATH):
-    if os.path.exists(FAKE_PATH) and os.path.exists(TRUE_PATH):
-        print("Merging Fake.csv and True.csv ...")
-        fake_df = pd.read_csv(FAKE_PATH)
-        true_df = pd.read_csv(TRUE_PATH)
-
-        fake_df["label"] = 1  # 1 = Fake
-        true_df["label"] = 0  # 0 = Real
-
-        combined_df = pd.concat([fake_df, true_df], ignore_index=True)
-        combined_df = combined_df.sample(frac=1, random_state=42).reset_index(drop=True)
-        combined_df.to_csv(MERGED_PATH, index=False)
-        print(f" Merged dataset saved as '{MERGED_PATH}' with {len(combined_df)} rows.")
-    else:
-        print(" Warning: Fake.csv or True.csv not found. Skipping dataset creation.")
-else:
-    print(f" Using existing dataset: {MERGED_PATH}")
-
-# -----------------------------------------------------------
-# 4️⃣ Helper Function — Clean Input Text
-# -----------------------------------------------------------
-def clean_text(text):
-    """Remove URLs, punctuation, and lowercase the text."""
-    text = re.sub(r"http\S+", "", text)
-    text = re.sub(r"[^a-zA-Z\s]", "", text)
-    text = text.lower().strip()
-    return text
-
-# -----------------------------------------------------------
-# 5️⃣ Home Page Route
-# -----------------------------------------------------------
-@app.route("/", methods=["GET"])
-def home():
-    return render_template("index.html", result=None)
-
-# -----------------------------------------------------------
-# 6️⃣ Prediction Route
-# -----------------------------------------------------------
-@app.route("/predict", methods=["POST"])
-def predict():
-    news_text = request.form.get("news", "")
-    if not news_text.strip():
-        return render_template("index.html", result=" Please enter a news text to analyze.")
-
-    cleaned = clean_text(news_text)
-    text_vec = vectorizer.transform([cleaned])
-    prediction = model.predict(text_vec)[0]
-    probability = model.predict_proba(text_vec)[0][prediction] * 100
-
-    # Step: Verify via API
-    verification = verify_with_newsapi(news_text[:50])  # use first few words as query
-
-    if prediction == 1:
-        label = f"FAKE NEWS ({probability:.2f}% confidence)"
-    else:
-        label = f"REAL NEWS ({probability:.2f}% confidence)"
-
-    return render_template(
-        "index.html",
-        result=label,
-        verified=verification["verified"],
-        sources=verification["sources"]
-    )
-
-# @app.route("/predict", methods=["POST"])
-# def predict():
-#     news_text = request.form.get("news", "")
-#     if not news_text.strip():
-#         return render_template("index.html", result=" Please enter a news text to analyze.")
-
-#     # Clean and vectorize
-#     cleaned = clean_text(news_text)
-#     text_vec = vectorizer.transform([cleaned])
-
-#     # Predict
-#     prediction = model.predict(text_vec)[0]
-#     probability = model.predict_proba(text_vec)[0][prediction] * 100
-
-#     if prediction == 1:
-#         result = f" FAKE NEWS ({probability:.2f}% confidence)"
-#     else:
-#         result = f" REAL NEWS ({probability:.2f}% confidence)"
-
-#     return render_template("index.html", result=result)
-
-# -----------------------------------------------------------
-# 7️⃣ Run Flask App
-# -----------------------------------------------------------
 import requests
+import feedparser
+from datetime import datetime, timedelta
+from collections import defaultdict
+ 
+SOURCE_SCORES = {
+    "The Washington Post": 95,
+    "BBC News": 90,
+    "CNN": 85,
+    "GNews": 80,
+    "GoogleNews": 80
+}
 
-NEWS_API_KEY = "ec7945ef0b6b4a6d9b8738462c159fde"
+# ----------------------------
+# 2️⃣ Fetch NewsAPI headlines
+# ----------------------------
+NEWSAPI_KEY = "ec7945ef0b6b4a6d9b8738462c159fde"
+newsapi_url = f"https://newsapi.org/v2/top-headlines?country=us&apiKey={NEWSAPI_KEY}"
+newsapi_response = requests.get(newsapi_url).json()
+newsapi_articles = newsapi_response.get('articles', [])
 
-def verify_with_newsapi(query):
-    """Check if similar articles appear in real news sources."""
-    url = f"https://newsapi.org/v2/everything?q={query}&language=en&apiKey={NEWS_API_KEY}"
+# ----------------------------
+# 3️⃣ Fetch GNews headlines
+# ----------------------------
+GNEWS_KEY = "ddb8f6145d6e116da72ef6a9b0708318"
+gnews_url = f"https://gnews.io/api/v4/top-headlines?country=us&token={GNEWS_KEY}"
+gnews_response = requests.get(gnews_url).json()
+gnews_articles = gnews_response.get('articles', [])
+
+# ----------------------------
+# 4️⃣ Fetch Google News RSS headlines
+# ----------------------------
+rss_url = "https://news.google.com/rss/search?q=technology&hl=en-US&gl=US&ceid=US:en"
+rss_feed = feedparser.parse(rss_url)
+rss_articles = rss_feed.entries
+
+# ----------------------------
+# 5️⃣ Utility functions
+# ----------------------------
+def recency_factor(published_at):
+    """Boost score if article is recent."""
     try:
-        response = requests.get(url)
-        data = response.json()
-        if data["status"] == "ok" and len(data["articles"]) > 0:
-            # Return top 3 verified article titles for reference
-            verified_titles = [a["title"] for a in data["articles"][:3]]
-            return {
-                "verified": True,
-                "sources": verified_titles
-            }
+        if isinstance(published_at, str):
+            published_date = datetime.fromisoformat(published_at[:-1])
+        else:  # RSS feed gives time_struct
+            published_date = datetime(*published_at[:6])
+        delta = datetime.now() - published_date
+        if delta < timedelta(days=1):
+            return 1.05
+        elif delta < timedelta(days=3):
+            return 1.02
         else:
-            return {"verified": False, "sources": []}
-    except Exception as e:
-        print("News API error:", e)
-        return {"verified": False, "sources": []}
+            return 0.95
+    except:
+        return 1.0
 
-if __name__ == "__main__":
-    app.run(debug=True)
+def compute_score(source_name, published_at):
+    base = SOURCE_SCORES.get(source_name, 50)
+    return min(int(base * recency_factor(published_at)), 100)
+
+# ----------------------------
+# 6️⃣ Aggregate headlines & compute trust
+# ----------------------------
+# Using a dict to merge repeated headlines across sources
+headline_data = defaultdict(list)
+
+# NewsAPI
+for art in newsapi_articles:
+    headline_data[art['title']].append(("The Washington Post" if "washingtonpost" in art['url'] else "NewsAPI", art['publishedAt']))
+
+# GNews
+for art in gnews_articles:
+    headline_data[art['title']].append(("GNews", art['publishedAt']))
+
+# Google RSS
+for art in rss_articles:
+    headline_data[art['title']].append(("GoogleNews", art.published_parsed))
+
+# Compute final trust score
+for title, sources in headline_data.items():
+    scores = [compute_score(src, date) for src, date in sources]
+    # Combine scores to boost confidence if multiple sources report the same headline
+    
+    combined_score = 1.0
+    for s in scores:
+        combined_score *= (1 - s / 100)
+        combined_score = 100 * (1 - combined_score)
+
+    print(f"Headline: {title}")
+    print(f"Reported by: {', '.join([src for src, _ in sources])}")
+    print(f"Trust Score: {int(combined_score)}%\n")
