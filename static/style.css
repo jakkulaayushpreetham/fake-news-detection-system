@@ -1,36 +1,24 @@
 /* Importing Poppins font */
 body {
   background-image: url("https://wallpapercave.com/wp/wp3396911.jpg");
-  background-size: cover;          /* makes the image cover the full screen */
-  background-repeat: no-repeat;    /* prevents tiling */
-  background-attachment: fixed;    /* keeps it fixed while scrolling */
-  background-position: center;     /* centers the image */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;
   font-family: 'Poppins', sans-serif;
-  color: #fff;                     /* ensures text is readable */
+  color: #fff;
 }
 
-/* body {
-  font-family: 'Poppins', sans-serif;
-  background: linear-gradient(135deg, #001F3F, #0074D9);
-  color: #fff;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin: 0;
-} */
- body::before {
+body::before {
   content: "";
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5); /* black overlay with 50% opacity */
+  background: rgba(0, 0, 0, 0.5);
   z-index: -1;
 }
-
 
 .wrapper {
   display: flex;
@@ -113,6 +101,36 @@ button:hover {
 .result-card.fake {
   background: rgba(255, 69, 0, 0.2);
   border: 2px solid #FF6347;
+}
+
+/* ✅ Verified Sources Box */
+.verified-box {
+  margin-top: 20px;
+  padding: 15px;
+  border-radius: 10px;
+  background: rgba(0, 255, 255, 0.1);
+  border: 1px solid #00FFFF;
+  text-align: left;
+  font-size: 15px;
+  color: #e8faff;
+  animation: fadeIn 1s ease-in-out;
+}
+
+.verified-box h3 {
+  margin-bottom: 8px;
+  color: #00ffff;
+  font-weight: 600;
+}
+
+.verified-box ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.verified-box.warning {
+  background: rgba(255, 99, 71, 0.15);
+  border: 1px solid #ff6347;
+  color: #ffeaea;
 }
 
 footer {

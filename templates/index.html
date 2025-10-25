@@ -13,7 +13,7 @@
     <div class="card">
       <h1>Intelligent Fake News Detection System</h1>
       <p class="subtitle">
-        Verify the authenticity of online news using AI-powered analysis and cross-verification.
+        Verify the authenticity of online news using AI-powered analysis and real-time cross-verification.
       </p>
 
       <form action="/predict" method="POST" class="input-area">
@@ -26,12 +26,27 @@
         <h2>Result</h2>
         <p>{{ result }}</p>
       </div>
+
+      {% if verified %}
+        <div class="verified-box">
+          <h3>✅ Verified Sources Found:</h3>
+          <ul>
+            {% for s in sources %}
+              <li>{{ s }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% else %}
+        <div class="verified-box warning">
+          <h3>⚠️ No Matching News Found in Trusted Sources</h3>
+        </div>
+      {% endif %}
       {% endif %}
     </div>
   </div>
 
   <footer>
-    
+   
   </footer>
 </body>
 </html>

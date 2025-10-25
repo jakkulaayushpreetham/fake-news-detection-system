@@ -75,23 +75,72 @@ def predict():
     if not news_text.strip():
         return render_template("index.html", result=" Please enter a news text to analyze.")
 
-    # Clean and vectorize
     cleaned = clean_text(news_text)
     text_vec = vectorizer.transform([cleaned])
-
-    # Predict
     prediction = model.predict(text_vec)[0]
     probability = model.predict_proba(text_vec)[0][prediction] * 100
 
-    if prediction == 1:
-        result = f" FAKE NEWS ({probability:.2f}% confidence)"
-    else:
-        result = f" REAL NEWS ({probability:.2f}% confidence)"
+    # Step: Verify via API
+    verification = verify_with_newsapi(news_text[:50])  # use first few words as query
 
-    return render_template("index.html", result=result)
+    if prediction == 1:
+        label = f"FAKE NEWS ({probability:.2f}% confidence)"
+    else:
+        label = f"REAL NEWS ({probability:.2f}% confidence)"
+
+    return render_template(
+        "index.html",
+        result=label,
+        verified=verification["verified"],
+        sources=verification["sources"]
+    )
+
+# @app.route("/predict", methods=["POST"])
+# def predict():
+#     news_text = request.form.get("news", "")
+#     if not news_text.strip():
+#         return render_template("index.html", result=" Please enter a news text to analyze.")
+
+#     # Clean and vectorize
+#     cleaned = clean_text(news_text)
+#     text_vec = vectorizer.transform([cleaned])
+
+#     # Predict
+#     prediction = model.predict(text_vec)[0]
+#     probability = model.predict_proba(text_vec)[0][prediction] * 100
+
+#     if prediction == 1:
+#         result = f" FAKE NEWS ({probability:.2f}% confidence)"
+#     else:
+#         result = f" REAL NEWS ({probability:.2f}% confidence)"
+
+#     return render_template("index.html", result=result)
 
 # -----------------------------------------------------------
 # 7️⃣ Run Flask App
 # -----------------------------------------------------------
+import requests
+
+NEWS_API_KEY = "ec7945ef0b6b4a6d9b8738462c159fde"
+
+def verify_with_newsapi(query):
+    """Check if similar articles appear in real news sources."""
+    url = f"https://newsapi.org/v2/everything?q={query}&language=en&apiKey={NEWS_API_KEY}"
+    try:
+        response = requests.get(url)
+        data = response.json()
+        if data["status"] == "ok" and len(data["articles"]) > 0:
+            # Return top 3 verified article titles for reference
+            verified_titles = [a["title"] for a in data["articles"][:3]]
+            return {
+                "verified": True,
+                "sources": verified_titles
+            }
+        else:
+            return {"verified": False, "sources": []}
+    except Exception as e:
+        print("News API error:", e)
+        return {"verified": False, "sources": []}
+
 if __name__ == "__main__":
     app.run(debug=True)
