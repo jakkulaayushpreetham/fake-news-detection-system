@@ -1,5 +1,15 @@
 /* Importing Poppins font */
 body {
+  background-image: url("https://wallpapercave.com/wp/wp3396911.jpg");
+  background-size: cover;          /* makes the image cover the full screen */
+  background-repeat: no-repeat;    /* prevents tiling */
+  background-attachment: fixed;    /* keeps it fixed while scrolling */
+  background-position: center;     /* centers the image */
+  font-family: 'Poppins', sans-serif;
+  color: #fff;                     /* ensures text is readable */
+}
+
+/* body {
   font-family: 'Poppins', sans-serif;
   background: linear-gradient(135deg, #001F3F, #0074D9);
   color: #fff;
@@ -9,7 +19,18 @@ body {
   justify-content: center;
   align-items: center;
   margin: 0;
+} */
+ body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* black overlay with 50% opacity */
+  z-index: -1;
 }
+
 
 .wrapper {
   display: flex;
