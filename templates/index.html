@@ -10,14 +10,14 @@
 
 <body>
   <div class="wrapper">
-    <div class="card">
+    <div class="card {% if result %}result-active{% endif %}">
       <h1>Intelligent Fake News Detection System</h1>
       <p class="subtitle">
         Verify the authenticity of online news using AI-powered analysis and real-time cross-verification.
       </p>
 
       <form action="/predict" method="POST" class="input-area">
-        <textarea name="news" placeholder="Paste or type a news headline or article here..." required>{{ request.form.news if request.form.news else '' }}</textarea>
+        <textarea name="news" placeholder="Paste or type a news headline or article here..." required>{{ request.form.news or "" }}</textarea>
         <button type="submit">Check Authenticity</button>
       </form>
 
@@ -27,16 +27,7 @@
         <p>{{ result }}</p>
       </div>
 
-      {% if verified and trust_scores %}
-        <div class="verified-box">
-          <h3>Verified Sources Found with Trust Scores:</h3>
-          <ul>
-            {% for source, score in trust_scores.items() %}
-              <li>{{ source }}  Trust Score: {{ score }}%</li>
-            {% endfor %}
-          </ul>
-        </div>
-      {% elif verified %}
+      {% if verified %}
         <div class="verified-box">
           <h3>Verified Sources Found:</h3>
           <ul>
@@ -55,7 +46,7 @@
   </div>
 
   <footer>
-    <p style="text-align:center; margin-top:20px;">&copy; 2025 Fake News Detection System</p>
+    <p>© 2025 Intelligent Fake News Detection System</p>
   </footer>
 </body>
 </html>
