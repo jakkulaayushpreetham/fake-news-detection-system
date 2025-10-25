@@ -33,7 +33,7 @@ print(" Model and vectorizer loaded successfully.")
 # -----------------------------------------------------------
 if not os.path.exists(MERGED_PATH):
     if os.path.exists(FAKE_PATH) and os.path.exists(TRUE_PATH):
-        print("🔹 Merging Fake.csv and True.csv ...")
+        print("Merging Fake.csv and True.csv ...")
         fake_df = pd.read_csv(FAKE_PATH)
         true_df = pd.read_csv(TRUE_PATH)
 
