@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Intelligent Fake News Detection System</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <div class="wrapper">
+    <div class="card">
+      <h1>Intelligent Fake News Detection System</h1>
+      <p class="subtitle">
+        Verify the authenticity of online news using AI-powered analysis and cross-verification.
+      </p>
+
+      <form action="/predict" method="POST" class="input-area">
+        <textarea name="news" placeholder="Paste or type a news headline or article here..." required></textarea>
+        <button type="submit">Check Authenticity</button>
+      </form>
+
+      {% if result %}
+      <div class="result-card {{ 'real' if 'Real' in result else 'fake' }}">
+        <h2>Result</h2>
+        <p>{{ result }}</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <footer>
+    <p>Built with love by Team <strong>TruthCheck</strong> | Powered by Flask + ML</p>
+  </footer>
+</body>
+</html>
