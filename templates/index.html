@@ -22,14 +22,25 @@
       </form>
 
       {% if result %}
-      <div class="result-card">
+      <div class="result-card {% if 'FAKE' in result %}fake{% else %}real{% endif %}">
         <h2>Trust Analysis</h2>
-        <p>{{ result }}</p>
+        <p>{{ result|safe }}</p>
       </div>
       {% endif %}
       
     </div>
   </div>
+  {% if sources %}
+<div class="verified-box">
+  <h3>✅ Verified Sources</h3>
+  <ul>
+    <li><a href="https://www.bbc.com/news" target="_blank">BBC News</a></li>
+    <li><a href="https://www.reuters.com/" target="_blank">Reuters</a></li>
+    <li><a href="https://timesofindia.indiatimes.com/" target="_blank">Times of India</a></li>
+    <li><a href="https://www.ndtv.com/" target="_blank">NDTV</a></li>
+  </ul>
+</div>
+{% endif %}
 
   <footer>
     <p>© 2025 Intelligent Fake News Detection System</p>
