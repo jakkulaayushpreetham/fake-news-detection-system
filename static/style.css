@@ -1,4 +1,6 @@
-/* Importing Poppins font */
+/* 🌈 Intelligent Fake News Detection — Perfectly Centered Glow Edition */
+
+/* Background setup */
 body {
   background-image: url("https://wallpapercave.com/wp/wp3396911.jpg");
   background-size: cover;
@@ -6,119 +8,269 @@ body {
   background-attachment: fixed;
   background-position: center;
   font-family: 'Poppins', sans-serif;
-  color: #fff;
+  color: #1a1a1a;
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow-x: hidden;
+  position: relative;
 }
 
+/* Bright overlay for glow effect */
 body::before {
   content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: -1;
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.25);
+  z-index: 0;
 }
 
+/* Wrapper */
 .wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-grow: 1;
+  min-height: 100vh;
+  width: 100%;
+  padding: 20px;
+  z-index: 1;
 }
 
+/* 🧠 Main Card */
 .card {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border-radius: 16px;
-  padding: 40px;
-  width: 600px;
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(15px);
+  border-radius: 22px;
+  padding: 60px;
+  width: 80vw;
+  max-width: 950px;
   text-align: center;
-  box-shadow: 0 0 25px rgba(255, 255, 255, 0.1);
-  animation: fadeIn 1s ease-in-out;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 0 50px rgba(255, 255, 255, 0.4);
+  animation: fadeIn 1s ease;
+  transition: all 0.4s ease-in-out;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
+.card:hover {
+  box-shadow: 0 0 65px rgba(255, 255, 255, 0.7);
+  transform: scale(1.02);
+}
+
+.card.result-active {
+  transform: scale(0.97);
+  transition: transform 0.6s ease, box-shadow 0.6s ease;
+}
+
+/* Title */
 h1 {
-  font-size: 28px;
-  margin-bottom: 10px;
-  color: #fff;
+  font-size: 44px;
+  margin-bottom: 16px;
+  color: #000;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-shadow: 0 0 12px rgba(255, 255, 255, 0.8);
 }
 
+/* Subtitle */
 .subtitle {
-  font-size: 15px;
-  color: #dcdcdc;
-  margin-bottom: 25px;
+  font-size: 20px;
+  color: #333;
+  font-weight: 600;
+  margin-bottom: 35px;
+  line-height: 1.8;
 }
 
+/* Textarea */
 textarea {
   width: 100%;
-  height: 160px;
-  padding: 12px;
-  border-radius: 12px;
+  height: 220px;
+  padding: 18px;
+  border-radius: 14px;
   border: none;
   outline: none;
   resize: none;
-  font-size: 15px;
-  font-family: 'Poppins', sans-serif;
-  box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+  font-size: 18px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #000;
+  font-weight: 500;
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.25);
+  transition: all 0.3s ease;
 }
 
+textarea:hover,
+textarea:focus {
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.9),
+              inset 0 0 10px rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+}
+
+/* Button */
 button {
-  margin-top: 18px;
-  background: linear-gradient(90deg, #00C9FF, #92FE9D);
+  margin-top: 25px;
+  background: linear-gradient(90deg, #fff, #d6f4ff);
   border: none;
-  padding: 12px 30px;
+  padding: 14px 36px;
   border-radius: 10px;
-  color: #000;
-  font-weight: 600;
-  font-size: 16px;
+  color: #002;
+  font-weight: 700;
+  font-size: 18px;
   cursor: pointer;
-  transition: 0.3s ease;
+  letter-spacing: 0.8px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.25);
+  transition: all 0.3s ease;
 }
 
 button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(0, 201, 255, 0.4);
+  transform: scale(1.06);
+  background: linear-gradient(90deg, #ffffff, #d8faff);
+  box-shadow: 0 0 35px rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.9);
 }
 
-/* ✅ Verified Sources Box */
-.verified-box {
-  margin-top: 20px;
-  padding: 15px;
-  border-radius: 10px;
-  background: rgba(0, 255, 255, 0.1);
-  border: 1px solid #00FFFF;
-  text-align: left;
-  font-size: 15px;
-  color: #e8faff;
-  animation: fadeIn 1s ease-in-out;
+/* 🧩 Result Card */
+.result-card {
+  margin-top: 35px;
+  border-radius: 12px;
+  padding: 22px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 700;
+  width: 65vw;
+  max-width: 700px;
+  min-width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 0 40px rgba(255, 255, 255, 0.4);
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp 0.8s ease forwards;
 }
 
-.verified-box h3 {
-  margin-bottom: 8px;
-  color: #00ffff;
-  font-weight: 600;
+.result-card.real {
+  background: linear-gradient(135deg, rgba(0, 255, 136, 0.8), rgba(0, 200, 100, 0.5));
+  border: 2px solid rgba(0, 255, 136, 0.9);
+  color: #003322;
+  box-shadow: 0 0 55px rgba(0, 255, 136, 0.6);
+  animation: fadeUp 0.8s ease forwards, realGlow 3s ease-in-out infinite alternate;
 }
 
-.verified-box ul {
-  margin: 0;
-  padding-left: 20px;
+.result-card.fake {
+  background: linear-gradient(135deg, rgba(255, 60, 60, 0.85), rgba(200, 0, 0, 0.45));
+  border: 2px solid rgba(255, 100, 100, 0.95);
+  color: #fff;
+  width: 55vw;
+  max-width: 600px;
+  box-shadow: 0 0 45px rgba(255, 100, 100, 0.5);
+  animation: fadeUp 0.8s ease forwards, fakeGlow 3s ease-in-out infinite alternate;
 }
 
-.verified-box.warning {
-  background: rgba(255, 99, 71, 0.15);
-  border: 1px solid #ff6347;
-  color: #ffeaea;
+/* 🌐 Loading Spinner */
+.loader {
+  border: 6px solid rgba(255, 255, 255, 0.3);
+  border-top: 6px solid #00ffff;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1s linear infinite;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  display: none;
+  box-shadow: 0 0 25px rgba(0, 255, 255, 0.7);
 }
 
+@keyframes spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Footer */
 footer {
   text-align: center;
-  color: #dcdcdc;
-  font-size: 14px;
-  margin-bottom: 10px;
+  color: #222;
+  font-size: 15px;
+  margin-top: 40px;
+  text-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
+}
+
+/* 🔆 Animations */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(25px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes realGlow {
+  0% { box-shadow: 0 0 30px rgba(0, 255, 136, 0.4); }
+  100% { box-shadow: 0 0 60px rgba(0, 255, 136, 0.9); }
+}
+
+@keyframes fakeGlow {
+  0% { box-shadow: 0 0 30px rgba(255, 75, 75, 0.5); }
+  100% { box-shadow: 0 0 60px rgba(255, 60, 60, 0.9); }
 }
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+/* 📱 Responsive */
+@media (max-width: 1024px) {
+  .card {
+    width: 90vw;
+    padding: 45px;
+  }
+
+  textarea {
+    height: 200px;
+  }
+
+  .result-card {
+    font-size: 18px;
+  }
+
+  h1 {
+    font-size: 34px;
+  }
+}
+
+@media (max-width: 600px) {
+  .card {
+    width: 95vw;
+    padding: 30px;
+  }
+
+  textarea {
+    height: 160px;
+  }
+
+  .result-card {
+    font-size: 16px;
+    width: 85vw;
+  }
+
+  h1 {
+    font-size: 26px;
+  }
+
+  .subtitle {
+    font-size: 15px;
+  }
+}
+.confidence {
+  color: #00e676;
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 8px;
+  text-shadow: 0 0 10px rgba(0, 230, 118, 0.4);
 }
