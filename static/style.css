@@ -81,28 +81,6 @@ button:hover {
   box-shadow: 0 4px 15px rgba(0, 201, 255, 0.4);
 }
 
-.result-card {
-  margin-top: 25px;
-  border-radius: 12px;
-  padding: 20px;
-  text-align: center;
-  color: #fff;
-}
-
-.result-card h2 {
-  margin-bottom: 8px;
-}
-
-.result-card.real {
-  background: rgba(0, 255, 127, 0.2);
-  border: 2px solid #00FF88;
-}
-
-.result-card.fake {
-  background: rgba(255, 69, 0, 0.2);
-  border: 2px solid #FF6347;
-}
-
 /* ✅ Verified Sources Box */
 .verified-box {
   margin-top: 20px;
@@ -144,30 +122,3 @@ footer {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
-.trust-score {
-  font-weight: 700;
-  margin-left: 8px;
-  padding: 4px 10px;
-  border-radius: 8px;
-  display: inline-block;
-  transition: all 0.3s ease;
-}
-
-.trust-score.high {
-  background: rgba(0, 255, 136, 0.25);
-  border: 1px solid rgba(0, 255, 136, 0.6);
-  color: #003322;
-}
-
-.trust-score.medium {
-  background: rgba(255, 165, 0, 0.25);
-  border: 1px solid rgba(255, 165, 0, 0.6);
-  color: #663300;
-}
-
-.trust-score.low {
-  background: rgba(255, 99, 71, 0.25);
-  border: 1px solid rgba(255, 99, 71, 0.6);
-  color: #660000;
-}
-
