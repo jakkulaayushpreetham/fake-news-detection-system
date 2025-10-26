@@ -20,13 +20,13 @@
         <textarea name="news" placeholder="Paste or type a news headline or article here..." required>{{ request.form.news or "" }}</textarea>
         <button type="submit">Check Authenticity</button>
       </form>
+{% if result %}
+  <div class="result-card {% if 'FAKE' in result %}fake{% else %}real{% endif %}">
+    <h2>Trust Analysis</h2>
+    <p>{{ result }}</p>
+  </div>
+{% endif %}
 
-      {% if result %}
-      <div class="result-card">
-        <h2>Trust Analysis</h2>
-        <p>{{ result }}</p>
-      </div>
-      {% endif %}
       
     </div>
   </div>
